@@ -15,4 +15,8 @@ public class UsuarioCreateDTO
     [Required(ErrorMessage = "A senha é obrigatória.")]
     [MinLength(6, ErrorMessage = "A senha deve ter no mínimo 6 caracteres.")]
     public string Senha { get; set; } = string.Empty;
+
+    
+    [Required(ErrorMessage = "Confirmar Senha é obrigatória.")]
+    public string ConfirmarSenha { get; set; } = string.Empty;
 }
