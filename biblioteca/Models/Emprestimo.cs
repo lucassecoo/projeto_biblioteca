@@ -14,6 +14,8 @@ public class Emprestimo
 
     public DateTime DataEmprestimo { get; set; }
 
+    public DateTime DataDevolucaoPrevista { get; set; }
+
     public DateTime? DataDevolucao { get; set; }
 
     public StatusEmprestimo Status { get; set; }

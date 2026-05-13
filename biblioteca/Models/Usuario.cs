@@ -12,4 +12,6 @@ public class Usuario
 
     public ICollection<Emprestimo> Emprestimos { get; set; }
     = new List<Emprestimo>();
+
+    public string Role { get; set; } = "User";
 }

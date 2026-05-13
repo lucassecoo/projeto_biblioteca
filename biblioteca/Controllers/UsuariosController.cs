@@ -20,6 +20,7 @@ public class UsuariosController : ControllerBase
         _context = context;
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<IActionResult> GetUsuarios()
     {
@@ -34,12 +35,13 @@ public class UsuariosController : ControllerBase
         return Ok(usuariosDTO);
     }
 
-    [HttpGet("{id:int}", Name = "GetById")]
+    [HttpGet("{id:int}")]
     public async Task<IActionResult> GetByIdAsync(int id)
     {
         var usuarioIdToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var isAdmin = User.IsInRole("Admin");
 
-        if (usuarioIdToken != id.ToString())
+        if (!isAdmin && usuarioIdToken != id.ToString())
         {
             return StatusCode(403, "Token inválido para este usuário.");
         }
@@ -78,28 +80,27 @@ public class UsuariosController : ControllerBase
         var usuario = new Usuario {
             Nome = dto.Nome,
             Email = dto.Email,
-            SenhaHash = senhaHash 
+            SenhaHash = senhaHash,
+            Role = "User"
         };
 
         _context.Usuarios.Add(usuario);
         await _context.SaveChangesAsync();
         
-        return CreatedAtRoute("GetById",
-            new { id = usuario.Id },
-            new UsuarioDTO {
-                Id = usuario.Id,
-                Nome = usuario.Nome,
-                Email = usuario.Email
-            }
-        );
+        return CreatedAtAction("GetById", new { id = usuario.Id }, new UsuarioDTO {
+            Id = usuario.Id,
+            Nome = usuario.Nome,
+            Email = usuario.Email
+        });
     }
 
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateUsuarioAsync(int id, UsuarioUpdateDTO dto)
     {   
         var usuarioIdToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var isAdmin = User.IsInRole("Admin");
 
-        if (usuarioIdToken != id.ToString())
+        if (!isAdmin && usuarioIdToken != id.ToString())
         {
             return StatusCode(403, "Token inválido para este usuário.");
 
@@ -130,8 +131,9 @@ public class UsuariosController : ControllerBase
     public async Task<IActionResult> DeleteUsuarioAsync(int id)
     {
         var usuarioIdToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var isAdmin = User.IsInRole("Admin");
 
-        if (usuarioIdToken != id.ToString())
+        if (!isAdmin && usuarioIdToken != id.ToString())
         {
             return StatusCode(403, "Token inválido para este usuário.");
         }
@@ -140,9 +142,9 @@ public class UsuariosController : ControllerBase
         if(usuario == null)
         {
             return NotFound();
-        }
+        } 
 
-       _context.Usuarios.Remove(usuario);
+        _context.Usuarios.Remove(usuario);
         await _context.SaveChangesAsync();
 
         return NoContent(); 
