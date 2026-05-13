@@ -1,3 +1,5 @@
+//LUCAS SECO, LUAN BEZERRA GIOVANE SILVANO
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using biblioteca.Data;
