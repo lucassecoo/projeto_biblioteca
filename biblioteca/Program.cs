@@ -19,21 +19,23 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("PermitirTudo", policy =>
-        policy.WithOrigins("https://localhost:3000")
+        policy.WithOrigins("http://localhost:3000")
             .AllowAnyHeader()
             .AllowAnyMethod());
 });
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>{
+    .AddJwtBearer(options =>
+    {
         var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!);
 
-        options.TokenValidationParameters = new TokenValidationParameters{
-            ValidateIssuer = false,   
-            ValidateAudience = false, 
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(key),
-            ClockSkew = TimeSpan.Zero 
+            ClockSkew = TimeSpan.Zero
         };
     });
 
@@ -43,8 +45,8 @@ builder.Services
     {
         options.JsonSerializerOptions.Converters
             .Add(new JsonStringEnumConverter());
-         options.JsonSerializerOptions.ReferenceHandler = 
-            System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.ReferenceHandler =
+           System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
     });
 
 builder.Services.AddEndpointsApiExplorer();
@@ -58,7 +60,8 @@ builder.Services.AddSwaggerGen(c =>
         Description = "API do sistema de biblioteca"
     });
 
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme{
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
         Type = SecuritySchemeType.Http,
         Scheme = "bearer",
         BearerFormat = "JWT"
@@ -75,7 +78,7 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
-builder.Services.AddSingleton<TokenService>(); 
+builder.Services.AddSingleton<TokenService>();
 
 var app = builder.Build();
 
@@ -85,8 +88,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
 app.UseCors("PermitirTudo");
+app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

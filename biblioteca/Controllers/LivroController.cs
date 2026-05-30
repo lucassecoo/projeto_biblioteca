@@ -77,8 +77,6 @@ public class LivroController : ControllerBase
         return Ok(MapLivroToDTO(livro));
     }
 
-    // PUT: api/Livro/{id}
-    // atualizar
     [HttpPut("{id:int}")]
     public async Task<IActionResult> AtualizarLivroAsync(int id, LivroUpdateDTO dto)
     {
@@ -93,7 +91,7 @@ public class LivroController : ControllerBase
         livro.Titulo = dto.Titulo;
         livro.Autor = dto.Autor;
         livro.AnoPublicacao = dto.AnoPublicacao;
-
+        livro.QuantidadeDisponivel = dto.QuantidadeDisponivel;
         await _context.SaveChangesAsync();
         return NoContent();
     }
