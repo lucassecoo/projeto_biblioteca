@@ -114,7 +114,9 @@ public class UsuariosController : ControllerBase
         }
 
         var existe = await _context.Usuarios
-            .AnyAsync(u => u.Email == dto.Email);
+            .AnyAsync(u =>
+                u.Email == dto.Email &&
+                u.Id != id);
 
         if (existe)
             return BadRequest(new { message = "Este email já está em uso." });
@@ -144,6 +146,16 @@ public class UsuariosController : ControllerBase
             return NotFound();
         } 
 
+        var possuiEmprestimos = await _context.Emprestimos
+            .AnyAsync(e => e.UsuarioId == id);
+
+        if (possuiEmprestimos)
+        {
+            return BadRequest(new
+            {
+                message = "Não é possível excluir um usuário que possui empréstimos registrados."
+            });
+        }
         _context.Usuarios.Remove(usuario);
         await _context.SaveChangesAsync();
 
