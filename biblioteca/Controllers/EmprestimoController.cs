@@ -56,16 +56,21 @@ public class EmprestimoController : ControllerBase
         _context.Emprestimos.Add(emprestimo);
         await _context.SaveChangesAsync();
 
-        var emprestimoDTO = new EmprestimoDTO
-        {
-            Id = emprestimo.Id,
-            NomeUsuario = usuario.Nome,
-            TituloLivro = livro.Titulo,
-            DataEmprestimo = emprestimo.DataEmprestimo,
-            DataDevolucaoPrevista = emprestimo.DataDevolucaoPrevista,
-            DataDevolucao = emprestimo.DataDevolucao,
-            Status = emprestimo.Status
-        };
+       var emprestimoDTO = new EmprestimoDTO
+{
+        Id = emprestimo.Id,
+
+        UsuarioId = emprestimo.UsuarioId,
+        LivroId = emprestimo.LivroId,
+
+        NomeUsuario = usuario.Nome,
+        TituloLivro = livro.Titulo,
+
+        DataEmprestimo = emprestimo.DataEmprestimo,
+        DataDevolucaoPrevista = emprestimo.DataDevolucaoPrevista,
+        DataDevolucao = emprestimo.DataDevolucao,
+        Status = emprestimo.Status
+};
 
         return CreatedAtAction(nameof(GetById), new { id = emprestimo.Id }, emprestimoDTO);
     }
@@ -100,6 +105,8 @@ public class EmprestimoController : ControllerBase
             .Select(e => new EmprestimoDTO
             {
                 Id = e.Id,
+                UsuarioId = e.UsuarioId,
+                LivroId = e.LivroId,
                 NomeUsuario = e.Usuario.Nome,
                 TituloLivro = e.Livro.Titulo,
                 DataEmprestimo = e.DataEmprestimo,
@@ -139,6 +146,8 @@ public class EmprestimoController : ControllerBase
         var emprestimoDTO = new EmprestimoDTO
         {
             Id = emprestimo.Id,
+            UsuarioId = emprestimo.UsuarioId,
+            LivroId = emprestimo.LivroId,
             NomeUsuario = emprestimo.Usuario.Nome,
             TituloLivro = emprestimo.Livro.Titulo,
             DataEmprestimo = emprestimo.DataEmprestimo,
@@ -180,6 +189,8 @@ public class EmprestimoController : ControllerBase
         var emprestimoDTO = new EmprestimoDTO
         {
             Id = emprestimo.Id,
+            UsuarioId = emprestimo.UsuarioId,
+            LivroId = emprestimo.LivroId,
             NomeUsuario = emprestimo.Usuario.Nome,
             TituloLivro = emprestimo.Livro.Titulo,
             DataEmprestimo = emprestimo.DataEmprestimo,
